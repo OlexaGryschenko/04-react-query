@@ -18,7 +18,7 @@ export default function App() {
   const [page, setPage] = useState<number>(1); 
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ['movies', query, page],
     queryFn: () => fetchMovies(query, page),
     placeholderData: keepPreviousData,
@@ -54,7 +54,7 @@ const openModal = (movie: Movie) => {
       {isError && <ErrorMessage/>}
       {isLoading && <Loader />}
 
-      {data?.total_pages && data.total_pages > 1 && !isLoading && !isError && (
+      {isSuccess && data.total_pages > 1 && (
       <Pagination
         totalPages={data.total_pages} 
         currentPage={page} 
@@ -62,7 +62,7 @@ const openModal = (movie: Movie) => {
       />
        )}
                
-      {data?.results && data.results.length > 0 && !isLoading && !isError && (
+      {isSuccess && data.results.length > 0 &&(
         <MovieGrid movies={data.results} onSelect={openModal} />        
       )}
 
